@@ -6,7 +6,7 @@ use warnings;
 use ExtUtils::MakeMaker;
 use ExtUtils::Depends;
 use Config;
-  
+
 our $OPTIMIZE;
 
 if ($Config{gccversion}) {
@@ -39,14 +39,18 @@ WriteMakefile(
     DEFINE        => '',
     INC           => '-I.',
     OPTIMIZE      => $OPTIMIZE,
-    ($ExtUtils::MakeMaker::VERSION gt '6.46' ?
+    (eval($ExtUtils::MakeMaker::VERSION) >= '6.46' ?
         (META_MERGE => {
             configure_requires => {
                 'ExtUtils::Depends' => '0.304',
                 %XS_PREREQUISITES
-            }})
+            },
+            resources => {
+                repository => 'http://github.com/chocolateboy/mysubs'
+            },
+        })
         : ()
     ),
-    ($ExtUtils::MakeMaker::VERSION gt '6.31' ? (LICENSE => 'perl') : ()),
+    (eval($ExtUtils::MakeMaker::VERSION) >= '6.31' ? (LICENSE => 'perl') : ()),
     %XS_DEPENDENCIES,
 );
